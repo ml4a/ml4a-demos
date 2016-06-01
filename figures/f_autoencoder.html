@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>ml4a-figures :: Autoencoder</title>
+    
+    <script src="../libraries/p5.js" type="text/javascript"></script>
+		
+    <script>
+    	var to_save = false;
+		  var batch_image_path = "../datasets/mnist/mnist_batch_1.png";
+    	var save_filename = "../datasets/mnist_unrolled.png"
+		
+      function setup() {
+        createCanvas(720, 220);
+      }
+
+      function draw() {
+        background(255);
+        //nnvis.draw_network();
+        
+        var rad1 = 100;
+        var rad2 = 68;
+        
+        textSize(100);
+        textCircle("x", 70, height/2, rad1, rad1/2);
+        textCircle("x'", width-70, height/2, rad1, rad1/2);
+        textCircle("z", width/2, height/2, rad2, rad2/1.5);
+        
+        fill(247);
+        
+        beginShape();
+        vertex(150, height/2-100);
+        vertex(300, height/2-30);
+        vertex(300, height/2+30);
+        vertex(150, height/2+100);
+        endShape(CLOSE);
+        
+        beginShape();
+        vertex(width-150, height/2-100);
+        vertex(width-300, height/2-30);
+        vertex(width-300, height/2+30);
+        vertex(width-150, height/2+100);
+        endShape(CLOSE);
+        
+        fill(0);
+        
+        draw_arrow(70+rad1/2, height/2, 150, height/2, 5, false);
+        draw_arrow(300, height/2, width/2-rad2/2, height/2, 5, false);
+        draw_arrow(width-150, height/2, width-70-rad1/2, height/2, 5, false);
+        draw_arrow(width-width/2+rad2/2, height/2, width-300, height/2, 5, false);
+        
+        push();
+        textAlign(CENTER);
+        textSize(28);
+        noStroke();
+        fill(0);
+        text("encoder", 225, height/2+7);
+        text("decoder", width-225, height/2+7);
+        pop();
+        
+        //saveCanvas("autoencoder.png");
+        if (to_save) {
+         // save(save_filename);
+        }
+      }
+
+      function textCircle(msg, x, y, r, ts) {
+        push();
+        textSize(ts);
+        fill(255);
+        stroke(0);
+        ellipse(x, y, r, r);
+        noStroke();
+        fill(0);
+        text(msg, x-textWidth(msg)/2, y+ts/3);
+        pop();
+      }
+
+      function draw_arrow(x1, y1, x2, y2, m, is_vert) {
+        push();
+        strokeWeight(3);
+        line(x1, y1, x2, y2);
+        if (is_vert) {
+          line(x2+1, y2, x2-m, y2+m);
+          line(x2-1, y2, x2+m, y2+m);
+        }
+        else {
+          line(x2, y2+1, x2-m, y2-m);
+          line(x2, y2-1, x2-m, y2+m);
+        }
+        pop();
+      }  
+		</script>
+
+    <style> body {padding: 0; margin: 0;} canvas {vertical-align: top;} </style>
+  </head>
+  <body>
+  </body>
+</html>

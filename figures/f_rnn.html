@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>ml4a-figures :: RNN</title>
+    
+    <script src="../libraries/p5.js" type="text/javascript"></script>
+    
+    <script>
+    	var to_save = false;
+		  var batch_image_path = "../datasets/mnist/mnist_batch_1.png";
+    	var save_filename = "../datasets/mnist_unrolled.png"
+
+      var c;
+
+      function setup() {
+        c = createCanvas(100, 100);
+        //noLoop();
+      }
+
+      function draw() {
+        if (frameCount > 2) return;
+        background(255);
+
+
+        draw_rnn_custom(1.5, 4, 'rnn_seq_unit', true, false);
+        draw_rnn_custom(1.5, 4, 'rnn_unit_seq', false, true);
+        draw_rnn_custom(1.5, 5, 'rnn_seq_seq', true, true, [0,1,2], [2,3,4]);
+        draw_rnn_custom(1.5, 3, 'rnn_seq_seq_sync', true, true, [0,1,2], [0,1,2]);
+        
+        return;
+        draw_rnn_stacked(1.5, 4, 'rnn_stacked_helloworld', "hello world");
+        
+        var script = "hello_world";
+        for (var i=0; i<10; i++){
+          draw_rnn_text(1, script[i], script[i+1], "rnn_text_hw_"+str(i));
+        }
+        
+        draw_ordinary(1.5, "nn_simple")
+        draw_rnn_simple(1.5, "rnn_simple");
+        draw_rnn_complex(1.5, "rnn_complex");
+        
+        draw_rnn_stacked(1.5, 1, 'rnn_stacked_1');
+        draw_rnn_stacked(1.5, 2, 'rnn_stacked_2');
+        draw_rnn_stacked(1.5, 3, 'rnn_stacked_3');
+        draw_rnn_stacked(1.5, 4, 'rnn_stacked_4');
+      }
+
+      function draw_ordinary(s, name) {
+        c.resize(s*150, s*460);
+        background(255);
+        scale(s, s);
+        draw_ordinary_simple(30, 80, 100, 300, 60, 20);
+       // saveCanvas(name+".png");
+      }
+
+      function draw_rnn_simple(s, name) {
+        c.resize(s*195, s*460);
+        background(255);
+        scale(s, s);
+        draw_rnn_simplified(30, 80, 200, 300, 60, 20);
+      //  saveCanvas(name+".png");
+      }
+
+      function draw_rnn_text(s, x, y, name) {
+        c.resize(s*540, s*560);
+        background(255);
+        scale(s, s);
+        draw_rnn_simplified(width/2-60, 125, 200, 300, 60, 20);
+        
+        push();
+        textSize(24);
+        noStroke();
+        fill(0);
+        text(x+"  →  "+y, 50, 125 + 150 + 12);
+        pop();
+        
+        draw_text_vector("y", y, 5, 25, false);
+        draw_text_vector("x", x, 5, height-32, true);
+        
+      //  saveCanvas(name+".png");
+      }  
+
+      function draw_rnn_custom(s, n, name, x_is_seq, y_is_seq, x_seq, y_seq) {
+        c.resize(s * (n) * 140, s * 460);
+        
+        background(255);
+        scale(s, s);
+        
+        var xt = 0;
+        var yt = 0;
+        for (var i=0; i<n; i++) {
+          var x_lab = x_is_seq ? null : (i==0 ? "X" : -1);     
+          var y_lab = y_is_seq ? null : (i==n-1 ? "Y" : -1);
+          if (x_lab == null && x_seq != null) {
+            x_lab = x_seq.indexOf(i) != -1 ? "X("+(xt++)+")" : -1;
+          }
+          if (y_lab == null && y_seq != null) {
+            y_lab = y_seq.indexOf(i) != -1 ? "Y("+(yt++)+")" : -1;
+          }
+          draw_rnn_simplified_single(30+i*140, 80, 175, 300, 60, 20, i, x_lab, y_lab);
+          if (i>0) {
+            draw_arrow(104 + (i-1) * 140, 230, 45 + i * 140, 230, 10);
+          }
+        }
+      //  saveCanvas(name+".png");
+      }
+
+      function draw_rnn_stacked(s, n, name, textString) {
+        if (textString == null) {
+          c.resize(s * (4) * 140, s * 460);
+        }
+        else {
+          c.resize(s * (textString.length-1) * 140, s * 460);
+        }
+        background(255);
+        scale(s, s);
+        
+        if (textString == null) {
+          for (var i=0; i<n; i++) {
+            draw_rnn_simplified_single(30+i*140, 80, 175, 300, 60, 20, i);
+            if (i>0) {
+              draw_arrow(104 + (i-1) * 140, 230, 45 + i * 140, 230, 10);
+            }
+          }
+        }
+        else {
+          for (var i=0; i<textString.length-1; i++) {
+            x_is(30+i*140, 80, 175, 300, 60, 20, i, textString[i], textString[i+1]);  
+            if (i>0) {
+              draw_arrow(104 + (i-1) * 140, 230, 45 + i * 140, 230, 10);
+            }
+          }
+        }
+       // saveCanvas(name+".png");
+      }
+
+      function draw_rnn_complex(s, name) {
+        c.resize(s*210, s*460);
+        background(255);
+        scale(s, s);
+        draw_rnn_full(30, 80, 160, 300, 60, 20);
+      //  saveCanvas(name+".png");
+      }
+
+      function draw_ordinary_and_rnn(s, name) {
+        c.resize(s*800, s*600);
+        background(255);
+        scale(s, s);
+        stroke(0);
+        draw_ordinary_simple(100, 100, 100, 240, 60, 20);
+        draw_rnn_full(400, 100, 160, 300, 60, 20);
+        saveCanvas(name+".png");
+      }
+
+      function draw_ordinary_simple(x, y, w, h, r, ts) {
+        push();
+        translate(x, y);
+
+        fill(255, 255, 0);
+        strokeWeight(2);
+        rect(0, 5, w, h-10);
+        strokeWeight(1);
+        
+        //line(w/2, h+r/2+10, w/2, -r/2-10);
+        draw_arrow(w/2, h+r/2+10, w/2, -10, 8, true);
+        draw_arrow(w/2, h+r/2+10, w/2, h/2+r/2, 8, true);
+        
+        textCircle("Y", w/2, -r/2-10, r, ts);
+        textCircle("* W", w/2, h/2, r, ts);
+        textCircle("X", w/2, h+r/2+10, r, ts);
+        
+        pop();
+      }
+
+      function draw_rnn_simplified_single(x, y, w, h, r, ts, idx, x_, y_) {
+        push();
+        translate(x, y);
+        
+        var y1 = h-r/2-10;
+        var y2 = r/2+10;
+        
+        fill(255, 255, 0);
+        strokeWeight(2);
+        rect(0, 5, w/2, h-10);
+        stroke(0, 100);
+        strokeWeight(0.5);
+        noFill();
+        //rect(5, y2+r/2+5, w-10, h - (y2+r/2+5) - 5);
+        strokeWeight(1);
+        stroke(0);
+
+        //line(w/4, h+r/2+10, w/4, -r/2-10);
+        if (y_ != -1) {
+          draw_arrow(w/4, h/2+r/2, w/4, -10, 8, true);
+        }
+        if (x_ != -1) {
+          draw_arrow(w/4, h+r/2+10, w/4, h/2+r/2, 8, true);
+        }
+        
+        textRect(idx == null ? "h(t)" : "h("+idx+")", w/4, h/2, r, r, ts);
+        if (y_ == null) {
+          textCircle(idx == null ? "Y" : "Y("+idx+")",  w/4, -r/2-10,           r, ts);
+        }
+        else if (y_ == -1) {
+        }
+        else {
+          textCircle(y_,  w/4, -r/2-10,           r, ts);
+        }
+        
+        if (x_ == null) {
+          textCircle(idx == null ? "X" : "X("+idx+")",  w/4, h+r/2+10,          r, ts);
+        }
+        else if (x_ == -1) {
+        } 
+        else {
+            textCircle(x_,  w/4, h+r/2+10,          r, ts);
+        }
+        
+        pop();
+      }
+
+      function draw_rnn_simplified(x, y, w, h, r, ts) {
+        push();
+        translate(x, y);
+
+        var y1 = h-r/2-10;
+        var y2 = r/2+10;
+        
+        fill(255, 255, 0);
+        strokeWeight(2);
+        rect(0, 5, w/2, h-10);
+        stroke(0, 100);
+        strokeWeight(0.5);
+        noFill();
+        //rect(5, y2+r/2+5, w-10, h - (y2+r/2+5) - 5);
+        strokeWeight(1);
+        stroke(0);
+
+        //line(w/4, h+r/2+10, w/4, -r/2-10);
+        draw_arrow(w/4, h+r/2+10, w/4, -10, 8, true);
+        draw_arrow(w/4, h+r/2+10, w/4, h/2+r/2, 8, true);
+        
+        textCircle("Y",  w/4, -r/2-10,           r, ts);
+        textRect("h(t)", w/4, h/2, r, r, ts);
+        textCircle("X",  w/4, h+r/2+10,          r, ts);
+        
+        noFill();
+        strokeWeight(5);
+        strokeCap(ROUND);
+        bezier(w/4 + r/2, h/2 - 10,
+        w/4 + r/2 + 100, h/2-100,
+        w/4 + r/2 + 100, h/2+100,
+        w/4 + r/2, h/2 + 10);
+        
+        strokeCap(ROUND);
+        line(w/4 + r/2, h/2 + 10, w/4 + r/2+12, h/2 + 8);
+        line(w/4 + r/2, h/2 + 10, w/4 + r/2+5, h/2 + 25);
+        
+        pop();
+      }
+
+      function draw_rnn_full(x, y, w, h, r, ts) {
+        push();
+        translate(x, y);
+
+        var y1 = h-r/2-10;
+        var y2 = r/2+10;
+        
+        fill(255, 255, 0);
+        strokeWeight(2);
+        rect(0, 0, w, h);
+        stroke(0, 100);
+        strokeWeight(0.5);
+        noFill();
+        //rect(5, y2+r/2+5, w-10, h - (y2+r/2+5) - 5);
+        strokeWeight(1);
+        stroke(0);
+
+        line(w/4, h+r/2+10, w/4, -r/2-10);
+        line(w/4, lerp(y1, y2, 1/3), 3*w/4, lerp(y1, y2, 1/3));
+        line(3*w/4, h-r/2-10, 3*w/4, lerp(y1, y2, 1/3));
+        
+        textCircle("Y",  w/4, -r/2-10,           r, ts);
+        textCircle("*W", w/4, y2,                r, ts);
+        textRect("h(t)", w/4, lerp(y1, y2, 2/3), r, r, ts);
+        textCircle("+",  w/4, lerp(y1, y2, 1/3), r/1.5, ts);
+        textCircle("*W", w/4, y1,                r, ts);
+        textCircle("X",  w/4, h+r/2+10,          r, ts);
+        
+        textRect("h(t-1)", 3*w/4, h-r/2-10, r, r, ts)
+        textCircle("*W",   3*w/4, lerp(y1, y2, 1/3), r, ts);
+        
+        pop();
+      }
+
+      function textCircle(msg, x, y, r, ts) {
+        push();
+        textSize(ts);
+        fill(255);
+        stroke(0);
+        ellipse(x, y, r, r);
+        noStroke();
+        fill(0);
+        text(msg, x-textWidth(msg)/2, y+ts/3);
+        pop();
+      }
+
+      function textRect(msg, x, y, w, h, ts) {
+        push();
+        textSize(ts);
+        fill(255);
+        stroke(0);
+        rect(x-w/2, y-h/2, w, h);
+        noStroke();
+        fill(0);
+        text(msg, x-textWidth(msg)/2, y+ts/3);
+        pop();
+      }
+
+      function draw_arrow(x1, y1, x2, y2, m, is_vert) {
+        push();
+        strokeWeight(3);
+        line(x1, y1, x2, y2);
+        if (is_vert) {
+          line(x2+1, y2, x2-m, y2+m);
+          line(x2-1, y2, x2+m, y2+m);
+        }
+        else {
+          line(x2, y2+1, x2-m, y2-m);
+          line(x2, y2-1, x2-m, y2+m);
+        }
+        pop();
+      }  
+
+      function draw_text_vector(name, x_, x, y, vec_top) {
+        var letters = ["_", "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+        var y1 = vec_top ? y : y+20;
+        var y2 = vec_top ? y+20 : y;
+        push();
+        textSize(18);
+        fill(0);
+        noStroke();
+        text(name+" = [", x, y1-1);
+        text("]", x+41+(letters.length)*18, y1-1);
+        for (var i=0; i<letters.length; i++) {
+          text((i == letters.indexOf(x_) ? "1" : "0")+(i==letters.length-1?"":","), x+41+i*18, y1);
+          text(letters[i], x+41+i*18, y2);
+        }
+        pop();  
+      }
+		</script>
+
+    <style> body {padding: 0; margin: 0;} canvas {vertical-align: top;} </style>
+  </head>
+  <body>
+  </body>
+</html>
