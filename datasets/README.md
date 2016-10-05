@@ -1,4 +1,3 @@
 External libraries used.
-
- - [p5.js]()
- - [convnet.js]()
+ - jQuery
+ - [convnet.js](https://github.com/karpathy/convnetjs)
