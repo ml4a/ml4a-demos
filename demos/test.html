@@ -352,9 +352,43 @@
             }
 
 
+            var fig_getWeights = function(ctx) {
+
+                var data = new dataset('MNIST');
+                var net = new convnet(data);
+                
+                //net.add_layer({type:'fc', num_neurons:10, activation:'sigmoid'});
+                net.add_layer({type:'softmax', num_classes:10});
+                net.setup_trainer({method:'adadelta', learning_rate:0.5, batch_size:8, l2_decay:0.0001});
+
+                
+                // 1) train N samples/preload  2) test M (fwd pass demo, conv demo
+                // 2) train + test intermittently  (weights demo)
+
+                var finished_training = function() {
+                    net.test(1, finished_testing);
+                }
+
+                var finished_testing = function(results) {
+                    console.log("done testing");
+
+                    net.draw_sample(ctx, 0, 20, 4);                    
+                    for (var idx=0; idx<10; idx++) {
+                        net.draw_filter(ctx, 1, idx, 33*3*idx, 140, 3);
+                    }
+                    data.draw_current_sample(ctx, 120, 20, 4);
+
+                    this.net = net.get_net();
+                }
+
+                net.train(1000, finished_training);
+                
+            }
 
 
-            fig_NeuralNet999(ctx);
+
+            fig_getWeights(ctx);
+
 
 
 
