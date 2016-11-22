@@ -78,7 +78,6 @@ function NetworkVisualization(settings)
 			if (!this.isVisible) {
 				return;
 			}
-
 			var s = this.style;
 
 			// neuron
@@ -134,7 +133,6 @@ function NetworkVisualization(settings)
 	        }
 
 	        ctx.restore();
-
 		};
 
 		this.style = clone(defaultNeuronStyle);

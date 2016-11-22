@@ -96,6 +96,11 @@ function dataset(datasetName)
 		this.draw_sample(ctx, idxSample, x, y, scale, grid_thickness);
 	};
 
+	this.get_sample_image = function(idx) {
+		var sample = batchCtx.getImageData(0, idx, sw*sh, 1);
+		return {data:sample.data, sw:sw, sh:sh, channels:channels};
+	};
+
 	this.draw_sample = function(ctx, idx, x, y, scale, grid_thickness) {
 		var g = (grid_thickness === undefined) ? 0 : grid_thickness;
 		var sampleImg = batchCtx.getImageData(0, idx, sw*sh, 1);

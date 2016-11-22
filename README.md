@@ -5,8 +5,16 @@ These are mirrored and can be [viewed live here](ml4a.github.io/dev/demos).
 External libraries used.
 
  - [convnet.js](http://cs.stanford.edu/people/karpathy/convnetjs/)
- - [p5.js](http://p5js.org)
  - jQuery
+
+
+To-Do:
+ - getting weights images
+ - getting activations images
+ - recreate figures
+ - recreate demos
+ - webcam demo
+ - t-sne viewer
 
 
 

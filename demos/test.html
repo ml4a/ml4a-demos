@@ -20,13 +20,20 @@
 
         <script>
 
+
+            // switch visualizer.net to draw(x, y) rect(w, h)
+            // mnist/cifar forward pass demo. visualizer.setup_from_convnet
+
+
             var net;
 
             var canvas = document.getElementById('myCanvas1');
             var ctx = canvas.getContext('2d');
             ctx.imageSmoothingEnabled = true;
 
-
+// cifar grid, mnist grid
+// mnist net
+// neuron
 
             function drawCIFARGrid(ctx) {
                 var data = new dataset('CIFAR');
@@ -387,7 +394,121 @@
 
 
 
-            fig_getWeights(ctx);
+            function fig_mnist(ctx) {
+                
+
+                var draw_sample_as_grid = function(sample, x_, y_, cellsize) {
+                    var nx = sample.sw;
+                    var ny = sample.sh;
+                    ctx.save();
+                    ctx.translate(x_, y_);  
+                    ctx.beginPath();
+                    ctx.rect(0, 0, nx * cellsize.x, ny * cellsize.y);
+                    ctx.strokeStyle = 'argb(255,0,0,1.0)';
+                    ctx.lineJoin = ctx.lineCap = 'round';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                    ctx.closePath();
+                    for (var y=0; y<ny; y++) {
+                        var ty = y * cellsize.y;
+                        for (var x=0; x<nx; x++) {
+                            var tx = x * cellsize.x;
+                            var idx_color = 4*(x+y*nx);
+                            ctx.save();
+                            ctx.font = (cellsize.x/2.0)+'px Arial';
+                            ctx.textAlign = 'center';   
+                            ctx.textBaseline = 'middle';
+                            ctx.translate(tx+cellsize.x/2.0, ty+cellsize.y/2.0);
+                            ctx.fillText(sample.data[idx_color], 0, 0);
+                            ctx.restore();
+                        }
+                    }
+                    ctx.restore();
+                }
+                
+                var net = new NetworkVisualization({
+                    context: ctx,
+                    rect: {x:900, y:10, w:350, h:610},
+                    architecture: [784, 5],
+                    visible: [20, 5],
+                    heightBounds: [[0, 1], [0.07, 0.93]],
+                    neuronStyle: {
+                        color: 'rgba(0,0,0,1.0)',
+                        thickness: 1.5,
+                        radius: 10,
+                        ellipsisRadius: 2,
+                        ellipsisMargin: 6
+                    },
+                    connectionStyle: {
+                        color: 'rgba(40,40,40,0.5)',
+                        arrowLen: 0,
+                        arrowWidth: 4,
+                        thickness: 1
+                    }
+                });
+                net.setNeuronStyle({
+                    leftLabelSize: 12,
+                    leftLabelText: 'pixel',
+                    leftLabelMargin: 20,
+                    leftLabelCounter: true}, 0);
+                net.setNeuronStyle({
+                    radius:30, 
+                    thickness:2.5}, 1);
+
+
+                var data = new dataset('MNIST');
+                data.load_next_batch(function(){
+                    var idx_sample = 2;
+                    var sample = data.get_sample_image(idx_sample);
+                    data.draw_sample(ctx, idx_sample, 10, 230, 5, 1);    
+                    draw_sample_as_grid(sample, 215, 10, {x:22, y:22});
+                    net.draw();
+
+
+                var y1 = 10;
+                var y2 = 620;
+                var x1 = 840;
+                var x2 = 960;
+                var xm = (x1 + x2) / 2;
+                var ym = (y1 + y2) / 2;
+
+
+                //var bez = function(x1, x2, xm, y1, y2, ym) {
+                var bez = function(x1, y1, x2, y2, x3, y3, x4, y4) {
+                    ctx.beginPath();
+                    ctx.moveTo(x1,y1);
+                    ctx.bezierCurveTo(
+                        x2,y2,
+                        x3,y3,
+                        x4,y4);
+                    ctx.stroke();
+                    ctx.closePath();
+                };
+
+                bez(x1, ym, xm, ym, x1, y1, xm, y1);
+                bez(x1, ym, xm, ym, x1, y2, xm, y2);
+
+
+                    // bezier
+                    /*
+                    ctx.beginPath();
+                    ctx.moveTo(850,310);
+                    ctx.bezierCurveTo(875,310,
+                        875,10,
+                        900,10);
+                    ctx.moveTo(850,310);
+                    ctx.bezierCurveTo(875,310,
+                        875,610,
+                        900,610);
+                    
+                    ctx.stroke();
+                    */
+
+                });
+            };
+
+            
+            fig_mnist(ctx);
 
 
 
