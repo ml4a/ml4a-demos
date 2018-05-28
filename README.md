@@ -1,20 +1,5 @@
-This repo will contain source code for the demos and figures used in [ml4a](http://ml4a.github.io). It needs a bit of organization and documentation but will be up and running soon.
+# Demos for ML in the browser
 
-These are mirrored and can be [viewed live here](ml4a.github.io/dev/demos).
+Collecting examples and demos of using machine learning in the browser, mainly using [Tensorflow.js](https://js.tensorflow.org/). 
 
-External libraries used.
-
- - [convnet.js](http://cs.stanford.edu/people/karpathy/convnetjs/)
- - jQuery
-
-
-To-Do:
- - getting weights images
- - getting activations images
- - recreate figures
- - recreate demos
- - webcam demo
- - t-sne viewer
-
-
-
+This repository will soon be viewable as live in-browser demos [here](http://ml4a.github.io/demos). More documentation and installation instructions soon.
