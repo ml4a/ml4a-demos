@@ -2,3 +2,9 @@ _site/
 .DS_Store
 Gemfile.lock
 datasets/*/*.png
+
+tfjs/*/.cache
+tfjs/*/node_modules
+tfjs/*/yarn.lock
+tfjs/*/dist
+release
