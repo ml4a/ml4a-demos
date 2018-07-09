@@ -1,0 +1,25 @@
+body {
+    font-family: 'Source Sans Pro', sans-serif; 
+    font-weight: 200; 
+    color: #000;
+    font-size:13px;
+    margin:0px;
+}
+button {
+  margin: 2px;
+  padding: 4px;
+}
+video {
+  width: 300;
+  height: 300;
+}
+p {
+  display: inline;
+  font-size: 14px;
+}
+h6 {
+  margin: 4px;
+  font-weight: lighter;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
