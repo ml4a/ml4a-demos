@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Play a guitar with your camera</title>
+  <title>t-SNE</title>
   
   <link rel="stylesheet" type="text/css" href="/css/main.css">
 
@@ -15,8 +15,9 @@
   <script src="https://unpkg.com/ml5" type="text/javascript"></script>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script> 
+  <!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-tsne"></script>
+
 
   <script src="https://cdn.jsdelivr.net/npm/pca-js@1.0.0/pca.min.js"></script>
 
@@ -26,21 +27,10 @@
 
 <body>
   <h2>Go</h2>
-  <div id="videoContainer"></div>
+  
   <img id="theImage" src="data/animals3/bat-0001.jpg" />
-  <h6 id="loading">Loading base model...</h6>
-  <p id="buttons"></p>
-  <br/>
-  <p><button id="train">Train</button><span id="loss"></span></p>
-  <br/>
-  <p>
-    <button id="buttonPredict">Start guessing!</button><br>
-    Your custom models labeled this as: <span id="result">...</span>
-  </p>
-  <br/>
-  <p>
-    <script src="sketch.js"></script>
-  </p>
+  <script src="sketch.js"></script>
+
 </body>
 
 </html>
