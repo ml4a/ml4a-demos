@@ -15,7 +15,8 @@ function setup() {
   createCanvas(720, 480);
   video = createCapture(VIDEO);
   video.size(width, height);
-  poseNet = ml5.poseNet(video, 'single', gotPoses);
+  poseNet = ml5.poseNet(video, modelReady);
+  poseNet.on('pose', gotPoses);
   video.hide();
 
   // audio 
@@ -25,6 +26,10 @@ function setup() {
   reverb = new p5.Reverb();
   reverb.process(osc, 6, 0.2);
   reverb.amp(4);
+}
+
+function modelReady() {
+  select('#status').html('Model Loaded');
 }
 
 function draw() {
@@ -98,5 +103,6 @@ function playNote(n, duration) {
 }
 
 function gotPoses(results) {
+  console.log(results);
   poses = results;
 }

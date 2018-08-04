@@ -205,8 +205,12 @@ function createButtons() {
 }
 
 // Show the results
-function gotResults(result) {
+function gotResults(err, result) {
+  if (err) {
+    console.error(err);
+  }
   slider.value(result);
   updatePaddle(result);
   predict();
 }
+

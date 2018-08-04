@@ -34,6 +34,7 @@ function addImage(label) {
 }
 
 function classify() {
+  console.log("CLASSIFY!")
   classifier.classify(gotResults);
 }
 
@@ -71,7 +72,11 @@ function createButtons() {
   buttonPredict.mousePressed(classify);
 }
 
-function gotResults(nextLabel) {
+function gotResults(err, nextLabel) {
+  if (err) {
+    console.error(err);
+  }
   select('#result').html(nextLabel);
   label = nextLabel;
 }
+

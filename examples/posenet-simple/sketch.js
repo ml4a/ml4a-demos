@@ -7,8 +7,13 @@ function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
   video.size(width, height);
-  poseNet = ml5.poseNet(video, 'single', gotPoses);
+  poseNet = ml5.poseNet(video, modelReady);
+  poseNet.on('pose', gotPoses);
   video.hide();
+}
+
+function modelReady() {
+  select('#status').html('Model Loaded');
 }
 
 function draw() {
