@@ -52,10 +52,13 @@ function drawKeypoints()  {
   
   for (let k=0; k<keypoints.length; k++) {
     let k1 = prevkeypoints[k];
-    let k2 = keypoints[k];
-      
+    let k3 = keypoints[k];
+
+    fill(0, 255, 0);
+    ellipse(k2.position.x, k2.position.y, 5, 5);
+
     let d = dist(k1.position.x, k1.position.y, k2.position.x, k2.position.y);
-    if (d < 5) {
+    if (d < 25) {
       continue;
     }
 
@@ -65,7 +68,10 @@ function drawKeypoints()  {
     if (!playing[n]) {
       playNote(n, 200);
     }
-    ellipse(k2.position.x, k2.position.y, 5, 5);
+
+    strokeWeight(3);
+    stroke(255, 0, 0);
+    line(k1.position.x, k1.position.y, k2.position.x, k2.position.y);
   }
 }
 
