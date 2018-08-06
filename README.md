@@ -7,3 +7,5 @@ This repository will soon be viewable as live in-browser demos [here](http://ml4
 To begin, start a local webserver from the root folder.
 
 	python -m SimpleHTTPServer
+
+	(in Python 3, use python -m http.server)
