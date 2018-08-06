@@ -52,7 +52,7 @@ function drawKeypoints()  {
   
   for (let k=0; k<keypoints.length; k++) {
     let k1 = prevkeypoints[k];
-    let k3 = keypoints[k];
+    let k2 = keypoints[k];
 
     fill(0, 255, 0);
     ellipse(k2.position.x, k2.position.y, 5, 5);
